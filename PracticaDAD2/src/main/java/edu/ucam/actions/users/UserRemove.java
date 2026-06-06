@@ -1,0 +1,75 @@
+package edu.ucam.actions.users;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Hashtable;
+
+import edu.ucam.actions.Action;
+import edu.ucam.config.Attributes;
+import edu.ucam.config.Parameters;
+import edu.ucam.config.UserTypes;
+import edu.ucam.domain.Titulation;
+import edu.ucam.domain.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+public class UserRemove extends Action {
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		boolean logged = super.adminFilter(request);
+		
+		if(logged) {
+			String username = request.getParameter(Parameters.USERNAME);
+			Connection conexion = (Connection) request.getServletContext().getAttribute(Attributes.CONEXION);
+			
+			try {
+				if(username != null) {
+					Hashtable <String, User> users = (Hashtable <String, User>) request.getServletContext().getAttribute(Attributes.USUARIOS);
+					userRemove(users, username, request, conexion);
+					request.getRequestDispatcher("/crud/secured/adminIndex.jsp").forward(request, response);
+				}
+			} catch(Exception ex) {
+				request.setAttribute(Attributes.ERROR_MSG, ex.getMessage());
+			}
+			
+			if(!response.isCommitted()) request.getRequestDispatcher("/crud/index.jsp").forward(request, response);
+		} else {
+			request.setAttribute(Attributes.ERROR_MSG, "USUARIO NO LOGUEADO, POR FAVOR INICIA SESION!");
+			response.sendRedirect(request.getContextPath() + "/login.jsp");
+		}
+	}
+
+	
+	// BUSCA USUARIO Y LA ELIMINA
+	private void userRemove(Hashtable <String, User> users, String username, HttpServletRequest request, Connection conexion) {
+		if(users.containsKey(username)) {
+			User u = users.get(username);
+			
+			if(u.getUsername().equals("admin") && u.getPassword().equals("admin") && u.getType().equals(UserTypes.ADMIN)) {
+				request.setAttribute(Attributes.ERROR_MSG, "Este administrador no se puede eliminar!");
+				
+			} else {
+				users.remove(username);
+				
+				// INSERTAR EN LA BASE DE DATOS
+				try {
+					
+					try (PreparedStatement psUpdateTitu = conexion.prepareStatement
+							("DELETE FROM Users WHERE username = ?")) {
+						psUpdateTitu.setString(1, username);
+						psUpdateTitu.executeUpdate();
+					}
+				} catch(SQLException ex) {
+					request.setAttribute(Attributes.ERROR_MSG, ex.getMessage());
+				}
+			}
+		} else {
+			request.setAttribute(Attributes.ERROR_MSG, "No se ha encontrado el usuario");
+		}
+	}
+}
