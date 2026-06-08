@@ -6,7 +6,6 @@ import edu.ucam.config.ActionID;
 import edu.ucam.config.Attributes;
 import edu.ucam.config.Parameters;
 import edu.ucam.domain.Subject;
-import edu.ucam.domain.Teacher;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.tagext.BodyTagSupport;
 
@@ -27,6 +26,7 @@ public class SubjectsList extends BodyTagSupport{
 				if(subjects.size() > 0) {
 					for(Subject s : subjects.values()) {
 						pageContext.getOut().println("<p>ID: " + s.getId() + " | NOMBRE: " + s.getNombre() + "</p>" +
+								" | PROFESOR: <strong>" + s.getProfUsername() + "</strong> | " +
 								" <a href='" + ctx + "/crud/modifiers/subModify.jsp?" + Parameters.ID_SUB + "=" + s.getId() + "'>Modificar</a>" +
 								" | <a href='" + ctx + "/Control?" + Parameters.ACTION_ID + "=" + ActionID.REMOVESUB +
 								"&" + Parameters.ID_SUB + "=" + s.getId() + "'>Eliminar</a></p>");

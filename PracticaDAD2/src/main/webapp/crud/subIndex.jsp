@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="mytags" prefix="dad2" %>
-<%@ page import="edu.ucam.config.*, edu.ucam.domain.Titulation" %>
+<%@ page import="edu.ucam.config.*, edu.ucam.domain.Titulation,  edu.ucam.domain.User" %>
 <%@ page import="java.util.Hashtable" %>
 
 <!DOCTYPE html>
@@ -24,7 +24,13 @@
 
 	String id = request.getParameter(Parameters.ID_TIT);
 	Hashtable<String, Titulation> titulations = 
+			
 			(Hashtable<String, Titulation>) request.getServletContext().getAttribute(Attributes.TITULACIONES);
+	
+	Hashtable<String, edu.ucam.domain.Subject> subjects = 
+			(Hashtable<String, edu.ucam.domain.Subject>) application.getAttribute(Attributes.ASIGNATURAS);
+	Hashtable<String, User> users = 
+			(Hashtable<String, User>) application.getAttribute(Attributes.USUARIOS);
 %>
 
 <!-- FORMULARIO PARA AÑADIR UNA NUEVA TITULACIÓN -->
@@ -67,6 +73,55 @@
     <input type="submit" value="Añadir asignatura">
 </form>
 
+<hr> <h2>Asignar Profesor a Asignatura</h2>
+<form action="<%= request.getContextPath() %>/Control" method="post">
+    
+    <input type="hidden" name="<%= Parameters.ACTION_ID %>" value="asignarProfesor">
+
+    Asignatura:
+    <select name="<%= Parameters.ID_SUB %>" required>
+        <option value="">-- Selecciona Asignatura --</option>
+        <%
+            if(subjects != null) {
+                for(edu.ucam.domain.Subject s : subjects.values()) {
+                    // Si ya tiene profesor, lo mostramos al lado de su nombre
+                    String infoProf = (s.getProfUsername() != null) ? " (Prof: " + s.getProfUsername() + ")" : " (Sin Profesor)";
+        %>
+                    <option value="<%= s.getId() %>">
+                        <%= s.getId() %> - <%= s.getNombre() %><%= infoProf %>
+                    </option>
+        <%
+                }
+            }
+        %>
+    </select>
+    
+    <br><br>
+
+    Profesor a asignar:
+    <select name="<%= Parameters.USERNAME %>" required>
+        <option value="">-- Selecciona Profesor --</option>
+        <%
+            if(users != null) {
+                for(User u : users.values()) {
+                    // Filtramos para que únicamente aparezcan los usuarios que son profesores
+                    if("TEACHER".equals(u.getType())) {
+        %>
+                        <option value="<%= u.getUsername() %>">
+                            <%= u.getUsername() %>
+                        </option>
+        <%
+                    }
+                }
+            }
+        %>
+    </select>
+    
+    <br><br>
+    <input type="submit" value="Vincular Profesor">
+</form>
+
+<hr>
 <!-- VOLVER AL INDEX -->
 <form action="<%= request.getContextPath() %>/crud/index.jsp">
     <input type="submit" value="Volver a la página principal">

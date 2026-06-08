@@ -32,6 +32,7 @@
     <select name="<%= Parameters.USERTYPE %>">
         <option value="<%= UserTypes.STUDENT %>">Alumno</option>
         <option value="<%= UserTypes.ADMIN %>">Administrador</option>
+        <option value="<%= UserTypes.TEACHER %>">Profesor</option>
     </select>
 	<br><br>
     <input type="submit" value="Añadir usuario">

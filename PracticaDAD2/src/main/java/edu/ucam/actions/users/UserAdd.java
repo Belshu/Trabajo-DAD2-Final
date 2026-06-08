@@ -12,7 +12,7 @@ import edu.ucam.config.Parameters;
 import edu.ucam.config.UserTypes;
 import edu.ucam.domain.Admin;
 import edu.ucam.domain.Student;
-import edu.ucam.domain.Titulation;
+import edu.ucam.domain.Teacher;
 import edu.ucam.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,6 +67,8 @@ public class UserAdd extends Action {
 			user = new Admin(username, password);
 		} else if (type.equals(UserTypes.STUDENT)) {
 			user = new Student(username, password);
+		} else if (type.equals(UserTypes.TEACHER)) { 
+			user = new Teacher(username, password);
 		} else {
 			request.setAttribute(Attributes.ERROR_MSG, "Tipo de usuario no válido");
 			return;

@@ -11,6 +11,7 @@ import java.util.Hashtable;
 
 import edu.ucam.actions.Action;
 import edu.ucam.actions.subjects.SubAdd;
+import edu.ucam.actions.subjects.SubAssignTeacher;
 import edu.ucam.actions.subjects.SubRemove;
 import edu.ucam.actions.subjects.SubModify;
 import edu.ucam.actions.users.UserAdd;
@@ -59,6 +60,9 @@ public class Control extends HttpServlet {
 		actions.put(ActionID.MODIFYUSER, new UserModify());
 		actions.put(ActionID.MODIFYTIT, new TitModify());
 		actions.put(ActionID.MODIFYSUB, new SubModify());
+		
+		//VINCULAR PROFESOR
+		actions.put("asignarProfesor", new SubAssignTeacher());
 	}
 
 

@@ -10,7 +10,6 @@ import edu.ucam.actions.Action;
 import edu.ucam.config.Attributes;
 import edu.ucam.config.Parameters;
 import edu.ucam.config.UserTypes;
-import edu.ucam.domain.Titulation;
 import edu.ucam.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

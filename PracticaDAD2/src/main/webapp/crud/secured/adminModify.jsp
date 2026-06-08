@@ -22,7 +22,7 @@
 
 <form action="<%= request.getContextPath() %>/Control" method="post">
 	<!-- Acción -->
-	<input type="hidden" name="<%= Parameters.ACTION_ID %>" value="<%=ActionID.MODIFYTIT%>">
+	<input type="hidden" name="<%= Parameters.ACTION_ID %>" value="<%=ActionID.MODIFYUSER%>">
 
 	<!-- Username (solo lectura) -->
 	Usuario:

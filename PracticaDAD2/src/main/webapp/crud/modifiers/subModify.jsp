@@ -1,4 +1,4 @@
-<%@ page import="java.util.Hashtable, edu.ucam.config.*, edu.ucam.domain.Subject, edu.ucam.domain.Titulation" %>
+<%@ page import="java.util.Hashtable, edu.ucam.config.*, edu.ucam.domain.Subject, edu.ucam.domain.Titulation,edu.ucam.domain.User" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -17,7 +17,10 @@
 
 	Hashtable<String, Titulation> titulations =
     	(Hashtable<String, Titulation>) application.getAttribute(Attributes.TITULACIONES);
-
+	
+	Hashtable<String, User> users = 
+	    	(Hashtable<String, User>) application.getAttribute(Attributes.USUARIOS);
+	
 	Subject subject = subjects.get(idSub);
 %>
 
@@ -50,6 +53,27 @@
                     <%= t.getId() %> - <%= t.getNombre() %>
                 </option>
         <%
+            }
+        }
+        %>
+    </select>
+    <br><br>
+    
+    Profesor Impartidor:
+    <select name="prof_username">
+        <option value="">-- Sin Profesor Asignado --</option>
+        <%
+        if(users != null){
+            for(User u : users.values()){
+                if("TEACHER".equals(u.getType())){
+                    // Comprobamos si este profesor es el que ya tiene asignado actualmente la asignatura
+                    String selectedProf = u.getUsername().equals(subject.getProfUsername()) ? "selected" : "";
+        %>
+                    <option value="<%= u.getUsername() %>" <%= selectedProf %>>
+                        <%= u.getUsername() %>
+                    </option>
+        <%
+                }
             }
         }
         %>

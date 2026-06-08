@@ -6,6 +6,7 @@ public class Subject {
 	private String id, nombre;
 	private int credits;
 	private final int maxStudents = 300;
+	private String profUsername;
 	
 	private Hashtable<String, Student> students;
 	private String idTit;
@@ -16,6 +17,7 @@ public class Subject {
 		this.nombre = nombre;
 		this.credits = credits;
 		this.students = new Hashtable<>();
+		this.profUsername = null;
 	}
 
 	public String getId() {
@@ -44,6 +46,14 @@ public class Subject {
 	
 	public void setIdTit(String idTit) {
 		this.idTit = idTit;
+	}
+	
+	public String getProfUsername() {
+		return profUsername;
+	}
+
+	public void setProfUsername(String profUsername) {
+		this.profUsername = profUsername;
 	}
 	
 	// GESTIÓN DE ESTUDIANTES

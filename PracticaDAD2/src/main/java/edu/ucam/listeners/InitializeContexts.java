@@ -15,6 +15,7 @@ import edu.ucam.config.Attributes;
 import edu.ucam.domain.Admin;
 import edu.ucam.domain.Student;
 import edu.ucam.domain.Subject;
+import edu.ucam.domain.Teacher;
 import edu.ucam.domain.Titulation;
 import edu.ucam.domain.User;
 import jakarta.servlet.ServletContextEvent;
@@ -86,18 +87,20 @@ public class InitializeContexts implements ServletContextListener{
 					}
 					
 					try (PreparedStatement psInsert = conexion.prepareStatement(
-                            "INSERT INTO subjects (id, tit_id, nombre, credits) VALUES (?, ?, ?, ?)")) {
+				            "INSERT INTO Subjects (id, tit_id, nombre, creditos, prof_username) VALUES (?, ?, ?, ?, ?)")) { // Añadido prof_username (Ojo: tu columna original se llamaba creditos, no credits)
 
-                        for (Subject s : subjects.values()) {
-                            psInsert.setString(1, s.getId());
-                            psInsert.setString(2, s.getIdTit());
-                            psInsert.setString(3, s.getNombre());
-                            psInsert.setInt(4, s.getCredits());
-                            psInsert.addBatch();
-                        }
+				        for (Subject s : subjects.values()) {
+				            psInsert.setString(1, s.getId());
+				            psInsert.setString(2, s.getIdTit());
+				            psInsert.setString(3, s.getNombre());
+				            psInsert.setInt(4, s.getCredits());
+				            psInsert.setString(5, s.getProfUsername()); 
+				            
+				            psInsert.addBatch();
+				        }
 
-                        psInsert.executeUpdate();
-                    }
+				        psInsert.executeUpdate();
+					}
 				}
 			} catch (SQLException ex) {
 	            System.out.println("InitializeContexts -> " + ex.getMessage());
@@ -149,6 +152,8 @@ public class InitializeContexts implements ServletContextListener{
 					usuarios.put(rs.getString("username"), new Admin(rs.getString("username"), rs.getString("password")));
 				} else if(rs.getString("type").equals("STUDENT")) {
 					usuarios.put(rs.getString("username"), new Student(rs.getString("username"), rs.getString("password")));
+				} else if(rs.getString("type").equals("TEACHER")) { 
+				    usuarios.put(rs.getString("username"), new Teacher(rs.getString("username"), rs.getString("password")));
 				}
 			}
 			ps.executeBatch();
@@ -167,10 +172,15 @@ public class InitializeContexts implements ServletContextListener{
 			// EXTRAER DATOS DE ASIGNATURAS --------------------------------------------------------
 			PreparedStatement ps3 = conexion.prepareStatement("SELECT * FROM Subjects");
 			rs = ps3.executeQuery();
-			
 			while(rs.next()) {
-				subjects.put(rs.getString("id"), 
-						new Subject(rs.getString("id"), rs.getString("tit_id"), rs.getString("nombre"), rs.getInt("creditos")));
+			    // 1. Instanciamos la asignatura
+			    Subject s = new Subject(rs.getString("id"), rs.getString("tit_id"), rs.getString("nombre"), rs.getInt("creditos"));
+			    
+			    // 2. Le asignamos el profesor leyendo la nueva columna de la BD
+			    s.setProfUsername(rs.getString("prof_username")); 
+			    
+			    // 3. La metemos en el Hashtable
+			    subjects.put(s.getId(), s);
 			}
 			ps3.executeBatch();
 
