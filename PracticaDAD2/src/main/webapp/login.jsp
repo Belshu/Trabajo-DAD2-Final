@@ -21,7 +21,7 @@
 	<br>
 	<br>
 	<% 
-        	String error = (String) request.getAttribute(edu.ucam.config.Attributes.ERROR_MSG);
+        	String error = (String) request.getSession().getAttribute(edu.ucam.config.Attributes.ERROR_MSG);
         
         	if(error != null) {
         		%><p style="color:red;">Error: <%= error %></p><%

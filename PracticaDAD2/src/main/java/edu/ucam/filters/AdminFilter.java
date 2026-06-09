@@ -29,8 +29,14 @@ public class AdminFilter extends HttpFilter implements Filter{
 			// OBTENER USUARIO DE SESIÓN
 			User user = (User) request.getSession().getAttribute(Attributes.LOGGED_USER);
 
+			if(user == null) {
+				System.out.println("AdminFilter -> Acceso denegado");
+				request.getSession().setAttribute(Attributes.ERROR_MSG, "Usuario no logueado!");
+				request.getRequestDispatcher("/login.jsp").forward(request, response);
+			}
+			
 			// COMPROBAR SI ES ADMIN
-			if (user != null && user.getType().equals(UserTypes.ADMIN)) {
+			if (user.getType().equals(UserTypes.ADMIN)) {
 				System.out.println("AdminFilter -> Administrador '" + user.getUsername() + "' accediendo a zona segura");
 				chain.doFilter(request, response);
 				return;
