@@ -37,6 +37,7 @@ public class LoginFilter extends HttpFilter implements Filter{
 		}
 		
 		// SI NO HAY USUARIO -> REDIRIGIR AL LOGIN
+		request.getSession().setAttribute(Attributes.ERROR_MSG, "Usuario no logueado!");
 		response.sendRedirect(request.getContextPath() + "/login.jsp");
 	}
 }
