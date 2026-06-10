@@ -2,7 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ page import="edu.ucam.config.*, edu.ucam.domain.Titulation" %>
 <%@ page import="java.util.Hashtable" %>
-
+<%@ page import="edu.ucam.domain.User" %>
+<%
+    //Validamos si hay sesión iniciada
+    User usuarioLogueado = (User) session.getAttribute(Attributes.LOGGED_USER); 
+    
+    if (usuarioLogueado == null) {
+        request.setAttribute(Attributes.ERROR_MSG, "Acceso denegado. Por favor, inicia sesión.");
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        return; 
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>

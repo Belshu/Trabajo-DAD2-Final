@@ -1,8 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="mytags" prefix="dad2" %>
-<%@ page import="edu.ucam.config.*, edu.ucam.domain.Titulation,  edu.ucam.domain.User" %>
+<%@ page import="edu.ucam.config.*, edu.ucam.domain.Titulation,  edu.ucam.domain.User, edu.ucam.config.Attributes" %>
 <%@ page import="java.util.Hashtable" %>
+
+<%
+    //Validamos si hay sesión iniciada
+    User usuarioLogueado = (User) session.getAttribute(Attributes.LOGGED_USER); 
+    
+    if (usuarioLogueado == null) {
+        request.setAttribute(Attributes.ERROR_MSG, "Acceso denegado. Por favor, inicia sesión.");
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        return; 
+    }
+%>
 
 <!DOCTYPE html>
 <html>

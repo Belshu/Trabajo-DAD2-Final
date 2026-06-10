@@ -40,7 +40,7 @@ public class UserModify extends Action{
 				request.setAttribute(Attributes.ERROR_MSG, ex.getMessage());
 			}
 			
-			if(!response.isCommitted()) request.getRequestDispatcher("/crud/index.jsp").forward(request, response);
+			if(!response.isCommitted()) request.getRequestDispatcher("/crud/secured/adminIndex.jsp").forward(request, response);
 		} else {
 			request.setAttribute(Attributes.ERROR_MSG, "USUARIO NO LOGUEADO, POR FAVOR INICIA SESION!");
 			response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -60,12 +60,12 @@ public class UserModify extends Action{
 				
 				try {
 					// INSERTAR EN LA BASE DE DATOS
-					try (PreparedStatement psUpdateTitu = conexion.prepareStatement
+					try (PreparedStatement psUpdateUser = conexion.prepareStatement
 							("UPDATE Users SET password = ? WHERE username = ?")) {
-						psUpdateTitu.setString(1, password);
-						psUpdateTitu.setString(2, username);
+						psUpdateUser.setString(1, password);
+						psUpdateUser.setString(2, username);
 						
-						psUpdateTitu.executeUpdate();
+						psUpdateUser.executeUpdate();
 					}
 				} catch(SQLException ex) {
 					request.setAttribute(Attributes.ERROR_MSG, ex.getMessage());
